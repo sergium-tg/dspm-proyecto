@@ -141,21 +141,21 @@ const Asignaturas: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader className="app-header">
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton fill="clear" onClick={() => history.replace('/home')} aria-label="Home">
+            <IonButton fill="clear" onClick={() => history.replace('/home')} aria-label="Home" className="app-button-base app-button-ghost app-button-icon">
               <IonIcon icon={homeOutline} slot="icon-only" />
             </IonButton>
           </IonButtons>
-          <IonTitle>Asignaturas</IonTitle>
+          <IonTitle className="app-header-title">Asignaturas</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
-        <div className="app-main-narrow app-space-y-3">
+      <IonContent fullscreen className="app-bg-background">
+        <div className="app-px-5 app-py-6 app-max-w-md app-mx-auto app-space-y-3">
           {loading && (
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div className="app-text-center app-p-6">
               <IonSpinner name="crescent" />
             </div>
           )}
@@ -167,30 +167,28 @@ const Asignaturas: React.FC = () => {
           )}
 
           {!loading && asignaturas.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '3rem 0' }}>
-              <IonText color="medium">
-                <p>Aún no hay asignaturas. Toca + para agregar una.</p>
-              </IonText>
-            </div>
+            <p className="app-text-sm app-text-muted-foreground app-text-center app-py-12">
+              Aún no hay asignaturas. Toca + para agregar una.
+            </p>
           )}
 
           {!loading && asignaturas.map((asignatura) => (
-            <IonCard key={asignatura.id} className="app-card">
+            <IonCard key={asignatura.id} className="app-card app-card-content-sm">
               <IonCardContent>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontWeight: 600, margin: '0 0 0.25rem 0' }}>
+                <div className="app-flex app-justify-between app-items-center app-gap-3">
+                  <div className="app-min-w-0">
+                    <p className="app-font-medium app-truncate">
                       {asignatura.descripcion}
                     </p>
-                    <p className="app-muted" style={{ margin: 0, fontSize: '0.875rem' }}>
+                    <p className="app-text-xs app-text-muted-foreground">
                       {asignatura.creditos} créditos · Promedio {asignatura.promedio?.toFixed(2) || '0.00'}
                     </p>
                   </div>
-                  <div style={{ display: 'flex', gap: '0.25rem' }}>
-                    <IonButton fill="clear" size="small" onClick={() => handleVerDetalles(asignatura.id)} aria-label="Ver detalles">
+                  <div className="app-flex app-gap-1 app-shrink-0">
+                    <IonButton fill="clear" size="small" onClick={() => handleVerDetalles(asignatura.id)} aria-label="Ver detalles" className="app-button-base app-button-ghost app-button-icon">
                       <IonIcon icon={eyeOutline} slot="icon-only" />
                     </IonButton>
-                    <IonButton fill="clear" size="small" color="danger" onClick={() => handleEliminarAsignatura(asignatura.id)} aria-label="Eliminar">
+                    <IonButton fill="clear" size="small" color="danger" onClick={() => handleEliminarAsignatura(asignatura.id)} aria-label="Eliminar" className="app-button-base app-button-ghost app-button-icon">
                       <IonIcon icon={trashOutline} slot="icon-only" />
                     </IonButton>
                   </div>
@@ -200,43 +198,47 @@ const Asignaturas: React.FC = () => {
           ))}
         </div>
 
-        <IonFab vertical="bottom" horizontal="end" onClick={() => setShowModal(true)}>
-          <IonFabButton>
+        <IonFab vertical="bottom" horizontal="end" slot="fixed" onClick={() => setShowModal(true)}>
+          <IonFabButton className="app-fab-button">
             <IonIcon icon={addOutline} />
           </IonFabButton>
         </IonFab>
 
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
-          <IonHeader>
+          <IonHeader className="app-modal-header">
             <IonToolbar>
-              <IonTitle>Nueva asignatura</IonTitle>
+              <IonTitle className="app-modal-title">Nueva asignatura</IonTitle>
               <IonButtons slot="end">
-                <IonButton onClick={() => setShowModal(false)}>Cerrar</IonButton>
+                <IonButton onClick={() => setShowModal(false)} className="app-button-base app-button-ghost">Cerrar</IonButton>
               </IonButtons>
             </IonToolbar>
           </IonHeader>
           <IonContent>
-            <div style={{ padding: '1.5rem' }} className="app-space-y-4">
-              <IonItem>
-                <IonLabel position="floating">Descripción</IonLabel>
+            <div className="app-modal-content app-space-y-4">
+              <div className="app-field">
+                <label htmlFor="descripcion" className="app-field-label">Descripción</label>
                 <IonInput
+                  id="descripcion"
+                  className="app-input-base"
                   value={nuevaAsignatura.descripcion}
                   onIonInput={(e) => setNuevaAsignatura({ ...nuevaAsignatura, descripcion: e.detail.value ?? '' })}
                 />
-              </IonItem>
+              </div>
 
-              <IonItem>
-                <IonLabel position="floating">Créditos (1-12)</IonLabel>
+              <div className="app-field">
+                <label htmlFor="creditos" className="app-field-label">Créditos (1-12)</label>
                 <IonInput
+                  id="creditos"
+                  className="app-input-base"
                   type="number"
                   min={1}
                   max={12}
                   value={nuevaAsignatura.creditos.toString()}
                   onIonInput={(e) => setNuevaAsignatura({ ...nuevaAsignatura, creditos: parseInt(e.detail.value ?? '3', 10) || 3 })}
                 />
-              </IonItem>
+              </div>
 
-              <IonButton expand="block" onClick={handleCrearAsignatura}>
+              <IonButton expand="block" onClick={handleCrearAsignatura} className="app-button-base app-button-primary">
                 Registrar
               </IonButton>
             </div>

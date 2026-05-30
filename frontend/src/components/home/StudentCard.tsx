@@ -13,13 +13,13 @@ const StudentCard: React.FC<StudentCardProps> = ({ estudiante }) => {
 
   return (
     <IonCard className="app-card" style={{ maxWidth: '100%' }}>
-      <IonCardContent className="app-space-y-4">
-        <div>
-          <p className="app-label-upper">Estudiante</p>
-          <h2 className="app-title-lg" style={{ marginTop: '0.25rem' }}>
+      <IonCardContent className="app-card-content app-space-y-4">
+        <div className="app-space-y-1">
+          <p className="app-text-xs app-uppercase app-tracking-wide app-text-muted-foreground">Estudiante</p>
+          <h2 className="app-text-2xl app-font-semibold">
             {nombreCompleto}
           </h2>
-          <p className="app-muted" style={{ margin: '0.25rem 0 0' }}>
+          <p className="app-text-sm app-text-muted-foreground">
             Código: {estudiante.codigo ?? '-'}
           </p>
         </div>
@@ -30,14 +30,14 @@ const StudentCard: React.FC<StudentCardProps> = ({ estudiante }) => {
         />
 
         <div
-          className={
+          className={`app-text-sm app-rounded-md app-px-3 app-py-2 ${
             estudiante.beneficios_cumple
-              ? 'app-benefit-banner app-benefit-banner--ok'
-              : 'app-benefit-banner app-benefit-banner--muted'
-          }
+              ? 'app-bg-primary/10 app-text-primary'
+              : 'app-bg-muted app-text-muted-foreground'
+          }`}
         >
           Beneficios:{' '}
-          <span style={{ fontWeight: 600 }}>
+          <span className="app-font-medium">
             {estudiante.beneficios_cumple ? 'Sí cumple' : 'No cumple'}
           </span>
         </div>
