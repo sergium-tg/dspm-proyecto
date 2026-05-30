@@ -10,15 +10,6 @@ export default defineConfig({
     react(),
     legacy()
   ],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://dspm-backend-proyecto-v2.onrender.com',
-        changeOrigin: true,
-        secure: true,
-      },
-    },
-  },
   test: {
     globals: true,
     environment: 'jsdom',
