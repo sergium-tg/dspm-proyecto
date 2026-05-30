@@ -1,0 +1,182 @@
+.app-page-centered {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 1rem;
+}
+
+.app-login-page {
+  --background: var(--background);
+}
+
+.app-login-page::part(background) {
+  background: var(--background);
+}
+
+ion-card.app-card {
+  margin: 0;
+  --background: var(--card);
+  box-shadow:
+    0 1px 3px 0 oklch(0 0 0 / 0.1),
+    0 1px 2px -1px oklch(0 0 0 / 0.1);
+}
+
+.app-card {
+  width: 100%;
+  max-width: 24rem;
+  margin: 0 auto;
+  border-radius: calc(var(--radius) + 4px);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--card-foreground);
+  box-shadow:
+    0 1px 3px 0 oklch(0 0 0 / 0.1),
+    0 1px 2px -1px oklch(0 0 0 / 0.1);
+}
+
+.app-card ion-card-content {
+  padding: 1.5rem;
+}
+
+.app-login-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.app-login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.app-login-field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--foreground);
+}
+
+.app-login-field ion-input.app-input {
+  --background: transparent;
+  --border-color: var(--input);
+  --border-radius: calc(var(--radius) - 2px);
+  --padding-start: 0.75rem;
+  --padding-end: 0.75rem;
+  --highlight-color-focused: var(--ring);
+  min-height: 2.25rem;
+  font-size: 0.875rem;
+}
+
+.app-login-field ion-input.app-input::part(native) {
+  font-size: 0.875rem;
+}
+
+.app-login-form ion-button.app-submit {
+  margin: 0;
+  --border-radius: calc(var(--radius) - 2px);
+  --box-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05);
+  height: 2.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.app-login-message {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.app-muted {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.app-label-upper {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+}
+
+.app-main-narrow {
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem;
+}
+
+.app-stat-box {
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  padding: 0.75rem;
+}
+
+.app-benefit-banner {
+  font-size: 0.875rem;
+  border-radius: calc(var(--radius) - 2px);
+  padding: 0.5rem 0.75rem;
+}
+
+.app-benefit-banner--ok {
+  background: color-mix(in oklch, var(--primary) 12%, transparent);
+  color: var(--primary);
+}
+
+.app-benefit-banner--muted {
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.app-link-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.app-link-row button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.app-link-row button:hover {
+  text-decoration: underline;
+}
+
+.app-title-lg {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.app-title-md {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.app-space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.app-space-y-5 > * + * {
+  margin-top: 1.25rem;
+}
+
+.app-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
