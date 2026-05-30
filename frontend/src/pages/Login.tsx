@@ -19,9 +19,9 @@ const Login: React.FC = () => {
   if (loading || user) {
     return (
       <IonPage>
-        <IonContent>
+        <IonContent className="app-bg-background">
           <div className="app-page-centered">
-            <p className="app-muted">Entrando…</p>
+            <p className="app-text-sm app-text-muted-foreground">Entrando…</p>
           </div>
         </IonContent>
       </IonPage>
@@ -30,7 +30,7 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent className="app-login-page" fullscreen>
+      <IonContent className="app-bg-background app-min-h-screen" fullscreen>
         <div className="app-page-centered">
           <LoginForm
             mode={login.mode}

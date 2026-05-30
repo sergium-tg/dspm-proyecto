@@ -1,1 +1,0 @@
-System.register(["./index-legacy-Cr92Bccn.js"],function(e,t){"use strict";var i;return{setters:[e=>{i=e.a}],execute:function(){e("MotionWeb",class extends i{constructor(){super(),this.registerWindowListener("devicemotion","accel"),this.registerWindowListener("deviceorientation","orientation")}})}}});

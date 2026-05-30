@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import {
   IonButton,
   IonButtons,
+  IonCard,
+  IonCardContent,
   IonContent,
   IonHeader,
   IonIcon,
@@ -115,21 +117,21 @@ const Perfil: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader className="app-header">
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton fill="clear" onClick={() => history.replace('/home')} aria-label="Home">
+            <IonButton fill="clear" onClick={() => history.replace('/home')} aria-label="Home" className="app-button-base app-button-ghost app-button-icon">
               <IonIcon icon={homeOutline} slot="icon-only" />
             </IonButton>
           </IonButtons>
-          <IonTitle>Perfil</IonTitle>
+          <IonTitle className="app-header-title">Perfil</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
-        <div className="app-main-narrow app-space-y-4">
+      <IonContent fullscreen className="app-bg-background">
+        <div className="app-px-5 app-py-6 app-max-w-md app-mx-auto">
           {loading && (
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div className="app-text-center app-p-6">
               <IonSpinner name="crescent" />
             </div>
           )}
@@ -141,44 +143,52 @@ const Perfil: React.FC = () => {
           )}
 
           {!loading && usuario && (
-            <div className="app-card app-space-y-4" style={{ padding: '1.25rem' }}>
-              <IonItem>
-                <IonLabel position="floating">Código</IonLabel>
-                <IonInput
-                  type="text"
-                  value={codigo}
-                  onIonInput={(e) => setCodigo(e.detail.value ?? '')}
-                />
-              </IonItem>
+            <IonCard className="app-card app-card-content app-space-y-4">
+              <IonCardContent>
+                <div className="app-field">
+                  <label htmlFor="codigo" className="app-field-label">Código</label>
+                  <IonInput
+                    id="codigo"
+                    className="app-input-base"
+                    type="text"
+                    value={codigo}
+                    onIonInput={(e) => setCodigo(e.detail.value ?? '')}
+                  />
+                </div>
 
-              <IonItem>
-                <IonLabel position="floating">Nombres</IonLabel>
-                <IonInput
-                  type="text"
-                  value={nombres}
-                  onIonInput={(e) => setNombres(e.detail.value ?? '')}
-                />
-              </IonItem>
+                <div className="app-field">
+                  <label htmlFor="nombres" className="app-field-label">Nombres</label>
+                  <IonInput
+                    id="nombres"
+                    className="app-input-base"
+                    type="text"
+                    value={nombres}
+                    onIonInput={(e) => setNombres(e.detail.value ?? '')}
+                  />
+                </div>
 
-              <IonItem>
-                <IonLabel position="floating">Meta de promedio (Beca)</IonLabel>
-                <IonInput
-                  type="number"
-                  step="0.1"
-                  value={becaPromedio}
-                  onIonInput={(e) => setBecaPromedio(e.detail.value ?? '')}
-                />
-              </IonItem>
+                <div className="app-field">
+                  <label htmlFor="becaPromedio" className="app-field-label">Promedio meta para beneficios</label>
+                  <IonInput
+                    id="becaPromedio"
+                    className="app-input-base"
+                    type="number"
+                    step="0.01"
+                    value={becaPromedio}
+                    onIonInput={(e) => setBecaPromedio(e.detail.value ?? '')}
+                  />
+                </div>
 
-              <div className="app-grid-2" style={{ paddingTop: '0.5rem' }}>
-                <IonButton expand="block" fill="outline" onClick={handleCancelar} disabled={saving}>
-                  Cancelar
-                </IonButton>
-                <IonButton expand="block" onClick={handleGuardar} disabled={saving}>
-                  {saving ? 'Guardando…' : 'Guardar'}
-                </IonButton>
-              </div>
-            </div>
+                <div className="app-grid-2 app-gap-3 app-pt-2">
+                  <IonButton expand="block" fill="outline" onClick={handleCancelar} disabled={saving} className="app-button-base app-button-outline">
+                    Cancelar
+                  </IonButton>
+                  <IonButton expand="block" onClick={handleGuardar} disabled={saving} className="app-button-base app-button-primary">
+                    {saving ? 'Guardando…' : 'Guardar'}
+                  </IonButton>
+                </div>
+              </IonCardContent>
+            </IonCard>
           )}
         </div>
       </IonContent>

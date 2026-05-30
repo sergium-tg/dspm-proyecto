@@ -89,21 +89,21 @@ const HomeContent: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader className="app-header">
         <IonToolbar>
-          <IonTitle>Inicio</IonTitle>
+          <IonTitle className="app-header-title">Inicio</IonTitle>
           <IonButtons slot="end">
-            <IonButton fill="clear" onClick={logout} aria-label="Cerrar sesión">
+            <IonButton fill="clear" onClick={logout} aria-label="Cerrar sesión" className="app-button-base app-button-ghost app-button-icon">
               <IonIcon icon={logOutOutline} slot="icon-only" />
             </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
-        <div className="app-main-narrow app-space-y-4">
+      <IonContent fullscreen className="app-bg-background">
+        <div className="app-px-5 app-py-6 app-max-w-md app-mx-auto app-space-y-6">
           {(loading || authLoading) && (
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div className="app-text-center app-p-6">
               <IonSpinner name="crescent" />
             </div>
           )}
@@ -118,11 +118,11 @@ const HomeContent: React.FC = () => {
             <StudentCard estudiante={estudianteCompatible} />
           )}
 
-          <div className="app-grid-2">
-            <IonButton expand="block" fill="outline" onClick={handleEditarPerfil}>
+          <div className="app-grid-2 app-gap-3">
+            <IonButton expand="block" fill="outline" onClick={handleEditarPerfil} className="app-button-base app-button-outline">
               Editar perfil
             </IonButton>
-            <IonButton expand="block" onClick={handleRevisarAsignaturas}>
+            <IonButton expand="block" onClick={handleRevisarAsignaturas} className="app-button-base app-button-primary">
               Revisar asignaturas
             </IonButton>
           </div>

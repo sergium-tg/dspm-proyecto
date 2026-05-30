@@ -45,24 +45,24 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onSubmit,
   onModeChange,
 }) => (
-  <IonCard className="app-card">
-    <IonCardContent className="app-space-y-5">
-      <div className="app-login-header">
-        <h1 className="app-title-lg">{title}</h1>
-        <p className="app-muted" style={{ margin: 0 }}>
+  <IonCard className="app-card app-max-w-sm">
+    <IonCardContent className="app-card-content app-space-y-5">
+      <div className="app-space-y-1">
+        <h1 className="app-text-2xl app-font-semibold app-tracking-tight">{title}</h1>
+        <p className="app-text-sm app-text-muted-foreground">
           {mode === 'reset'
             ? 'Te enviaremos un correo para restablecer tu contraseña.'
             : 'Gestiona tus asignaturas y evaluaciones.'}
         </p>
       </div>
 
-      <form onSubmit={onSubmit} className="app-space-y-4 app-login-form">
+      <form onSubmit={onSubmit} className="app-space-y-4">
         {mode === 'register' && onNombresChange && (
-          <div className="app-login-field">
-            <label htmlFor="register-nombre">Nombres</label>
+          <div className="app-field">
+            <label htmlFor="register-nombre" className="app-field-label">Nombres</label>
             <IonInput
               id="register-nombre"
-              className="app-input"
+              className="app-input-base"
               fill="outline"
               type="text"
               value={nombres}
@@ -73,11 +73,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </div>
         )}
 
-        <div className="app-login-field">
-          <label htmlFor="login-email">Correo</label>
+        <div className="app-field">
+          <label htmlFor="login-email" className="app-field-label">Correo</label>
           <IonInput
             id="login-email"
-            className="app-input"
+            className="app-input-base"
             fill="outline"
             type="email"
             value={email}
@@ -88,11 +88,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </div>
 
         {mode !== 'reset' && (
-          <div className="app-login-field">
-            <label htmlFor="login-password">Contraseña</label>
+          <div className="app-field">
+            <label htmlFor="login-password" className="app-field-label">Contraseña</label>
             <IonInput
               id="login-password"
-              className="app-input"
+              className="app-input-base"
               fill="outline"
               type="password"
               value={password}
@@ -105,11 +105,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
         )}
 
         {mode === 'register' && onCodigoChange && (
-          <div className="app-login-field">
-            <label htmlFor="register-codigo">Código</label>
+          <div className="app-field">
+            <label htmlFor="register-codigo" className="app-field-label">Código</label>
             <IonInput
               id="register-codigo"
-              className="app-input"
+              className="app-input-base"
               fill="outline"
               type="text"
               value={codigo}
@@ -131,12 +131,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </IonNote>
         )}
 
-        <IonButton expand="block" type="submit" className="app-submit" disabled={busy}>
+        <IonButton expand="block" type="submit" className="app-button-base app-button-primary" disabled={busy}>
           {busy ? 'Procesando…' : submitLabel}
         </IonButton>
       </form>
 
-      <div className="app-link-row">
+      <div className="app-flex app-justify-between app-text-xs app-text-muted-foreground">
         {mode !== 'login' ? (
           <button type="button" onClick={() => onModeChange('login')}>
             Volver al login
