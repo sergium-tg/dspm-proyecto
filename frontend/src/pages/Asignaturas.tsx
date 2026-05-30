@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   IonButton,
@@ -20,11 +20,13 @@ import {
   IonTitle,
   IonToolbar,
   IonToast,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import { addOutline, homeOutline, trashOutline, eyeOutline } from 'ionicons/icons';
 import { useAuth } from '../hooks/useAuth';
 import { useShakeDetection } from '../hooks/useShakeDetection';
-import { obtenerAsignaturas, crearAsignatura, eliminarAsignatura } from '../services/asignaturaService';
+import { crearAsignatura, eliminarAsignatura } from '../services/asignaturaService';
+import { sincronizarResumenAcademico } from '../services/academicSummaryService';
 import type { Asignatura } from '../types/entities';
 
 const Asignaturas: React.FC = () => {
@@ -40,6 +42,17 @@ const Asignaturas: React.FC = () => {
   // Modal para crear asignatura
   const [showModal, setShowModal] = useState(false);
   const [nuevaAsignatura, setNuevaAsignatura] = useState({ descripcion: '', creditos: 3 });
+  
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const isFirstEnter = useRef(true);
+
+  useIonViewWillEnter(() => {
+    if (isFirstEnter.current) {
+      isFirstEnter.current = false;
+      return;
+    }
+    setRefreshTrigger((prev) => prev + 1);
+  });
 
   useEffect(() => {
     if (!user) {
@@ -54,7 +67,7 @@ const Asignaturas: React.FC = () => {
 
     (async () => {
       try {
-        const data = await obtenerAsignaturas();
+        const data = await sincronizarResumenAcademico(user.uid);
         if (cancelled) return;
         setAsignaturas(data);
       } catch (err: unknown) {
@@ -70,7 +83,7 @@ const Asignaturas: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, refreshTrigger]);
 
   const handleCrearAsignatura = async () => {
     if (!user) return;
@@ -87,7 +100,8 @@ const Asignaturas: React.FC = () => {
         descripcion: nuevaAsignatura.descripcion.trim(),
         creditos: creditosValidados,
       });
-      setAsignaturas([...asignaturas, creada]);
+      const sincronizadas = await sincronizarResumenAcademico(user.uid);
+      setAsignaturas(sincronizadas.length ? sincronizadas : [...asignaturas, creada]);
       setNuevaAsignatura({ descripcion: '', creditos: 3 });
       setShowModal(false);
       setToastMessage('Asignatura creada exitosamente');
@@ -107,7 +121,8 @@ const Asignaturas: React.FC = () => {
 
     try {
       await eliminarAsignatura(id);
-      setAsignaturas(asignaturas.filter((a) => a.id !== id));
+      const sincronizadas = await sincronizarResumenAcademico(user.uid);
+      setAsignaturas(sincronizadas);
       setToastMessage('Asignatura eliminada');
       setToastColor('success');
       setShowToast(true);
@@ -141,15 +156,18 @@ const Asignaturas: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader className="app-header">
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonButton fill="clear" onClick={() => history.replace('/home')} aria-label="Home" className="app-button-base app-button-ghost app-button-icon">
-              <IonIcon icon={homeOutline} slot="icon-only" />
-            </IonButton>
-          </IonButtons>
-          <IonTitle className="app-header-title">Asignaturas</IonTitle>
-        </IonToolbar>
+      <IonHeader className="ion-no-border">
+        <header className="app-header" style={{ padding: '0.75rem 1.25rem' }}>
+          <button
+            onClick={() => history.replace('/home')}
+            aria-label="Home"
+            className="app-button-base app-button-ghost app-button-icon app-flex app-items-center app-justify-center"
+            style={{ width: '2.5rem', height: '2.5rem', border: 'none', background: 'none', cursor: 'pointer' }}
+          >
+            <IonIcon icon={homeOutline} style={{ fontSize: '1.25rem' }} />
+          </button>
+          <h1 className="app-header-title" style={{ margin: 0, paddingLeft: '0.25rem' }}>Asignaturas</h1>
+        </header>
       </IonHeader>
 
       <IonContent fullscreen className="app-bg-background">
@@ -173,50 +191,61 @@ const Asignaturas: React.FC = () => {
           )}
 
           {!loading && asignaturas.map((asignatura) => (
-            <IonCard key={asignatura.id} className="app-card app-card-content-sm">
-              <IonCardContent>
-                <div className="app-flex app-justify-between app-items-center app-gap-3">
-                  <div className="app-min-w-0">
-                    <p className="app-font-medium app-truncate">
-                      {asignatura.descripcion}
-                    </p>
-                    <p className="app-text-xs app-text-muted-foreground">
-                      {asignatura.creditos} créditos · Promedio {asignatura.promedio?.toFixed(2) || '0.00'}
-                    </p>
-                  </div>
-                  <div className="app-flex app-gap-1 app-shrink-0">
-                    <IonButton fill="clear" size="small" onClick={() => handleVerDetalles(asignatura.id)} aria-label="Ver detalles" className="app-button-base app-button-ghost app-button-icon">
-                      <IonIcon icon={eyeOutline} slot="icon-only" />
-                    </IonButton>
-                    <IonButton fill="clear" size="small" color="danger" onClick={() => handleEliminarAsignatura(asignatura.id)} aria-label="Eliminar" className="app-button-base app-button-ghost app-button-icon">
-                      <IonIcon icon={trashOutline} slot="icon-only" />
-                    </IonButton>
-                  </div>
+            <div key={asignatura.id} className="app-card app-p-4">
+              <div className="app-flex app-justify-between app-items-center app-gap-3">
+                <div className="app-min-w-0">
+                  <p className="app-font-medium app-truncate" style={{ margin: 0 }}>
+                    {asignatura.descripcion}
+                  </p>
+                  <p className="app-text-xs app-text-muted-foreground" style={{ margin: '0.25rem 0 0 0' }}>
+                    {asignatura.creditos} créditos · Promedio {asignatura.promedio?.toFixed(2) || '0.00'} · {asignatura.aprueba ? 'Aprueba' : 'No aprueba'}
+                  </p>
                 </div>
-              </IonCardContent>
-            </IonCard>
+                <div className="app-flex app-gap-1 app-shrink-0">
+                  <IonButton fill="clear" size="small" onClick={() => handleVerDetalles(asignatura.id)} aria-label="Ver detalles" className="app-button-base app-button-ghost app-button-icon">
+                    <IonIcon icon={eyeOutline} slot="icon-only" />
+                  </IonButton>
+                  <IonButton fill="clear" size="small" color="danger" onClick={() => handleEliminarAsignatura(asignatura.id)} aria-label="Eliminar" className="app-button-base app-button-ghost app-button-icon">
+                    <IonIcon icon={trashOutline} slot="icon-only" />
+                  </IonButton>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
 
-        <IonFab vertical="bottom" horizontal="end" slot="fixed" onClick={() => setShowModal(true)}>
-          <IonFabButton className="app-fab-button">
+        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+          <IonFabButton className="app-fab-button" onClick={() => setShowModal(true)}>
             <IonIcon icon={addOutline} />
           </IonFabButton>
         </IonFab>
 
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
-          <IonHeader className="app-modal-header">
-            <IonToolbar>
-              <IonTitle className="app-modal-title">Nueva asignatura</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={() => setShowModal(false)} className="app-button-base app-button-ghost">Cerrar</IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-            <div className="app-modal-content app-space-y-4">
+          <div className="app-modal-shell">
+            <div className="app-modal-header app-flex app-items-center app-justify-center" style={{ position: 'relative', borderBottom: 'none', padding: '1.25rem 1.25rem 0.5rem 1.25rem' }}>
+              <h2 className="app-modal-title" style={{ margin: 0, fontSize: '1.125rem', fontWeight: 600 }}>Nueva asignatura</h2>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                aria-label="Cerrar"
+                style={{
+                  position: 'absolute',
+                  right: '1.25rem',
+                  top: '1.25rem',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1.25rem',
+                  color: 'var(--muted-foreground)',
+                  cursor: 'pointer',
+                  padding: 0
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="app-modal-content app-space-y-4" style={{ padding: '0.75rem 1.25rem 1.25rem 1.25rem' }}>
               <div className="app-field">
-                <label htmlFor="descripcion" className="app-field-label">Descripción</label>
+                <label htmlFor="descripcion" className="app-field-label">Nombre</label>
                 <IonInput
                   id="descripcion"
                   className="app-input-base"
@@ -238,11 +267,36 @@ const Asignaturas: React.FC = () => {
                 />
               </div>
 
-              <IonButton expand="block" onClick={handleCrearAsignatura} className="app-button-base app-button-primary">
-                Registrar
-              </IonButton>
+              <div className="app-flex app-flex-col app-gap-2" style={{ paddingTop: '0.5rem' }}>
+                <IonButton
+                  expand="block"
+                  onClick={handleCrearAsignatura}
+                  className="app-button-base app-button-primary"
+                  style={{ margin: 0 }}
+                >
+                  Registrar
+                </IonButton>
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="app-button-base app-button-outline app-w-full app-flex app-items-center app-justify-center"
+                  style={{
+                    height: '3rem',
+                    fontSize: '0.95rem',
+                    border: '1px solid var(--border)',
+                    borderRadius: '0.625rem',
+                    background: '#ffffff',
+                    color: 'var(--foreground)',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  Cancelar
+                </button>
+              </div>
             </div>
-          </IonContent>
+          </div>
         </IonModal>
 
         <IonToast

@@ -11,12 +11,14 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import { logOutOutline } from 'ionicons/icons';
 import { getFirebaseAuth } from '../config/firebase';
 import { useAuth } from '../hooks/useAuth';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { obtenerUsuarioPorUid } from '../services/usuarioService';
+import { sincronizarResumenAcademico } from '../services/academicSummaryService';
 import type { Usuario, Estudiante } from '../types/entities';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 import StudentCard from '../components/home/StudentCard';
@@ -27,6 +29,16 @@ const HomeContent: React.FC = () => {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const isFirstEnter = useRef(true);
+
+  useIonViewWillEnter(() => {
+    if (isFirstEnter.current) {
+      isFirstEnter.current = false;
+      return;
+    }
+    setRefreshTrigger((prev) => prev + 1);
+  });
 
   useEffect(() => {
     if (!user) {
@@ -41,6 +53,7 @@ const HomeContent: React.FC = () => {
 
     (async () => {
       try {
+        await sincronizarResumenAcademico(user.uid);
         const data = await obtenerUsuarioPorUid(user.uid);
         if (cancelled) return;
         setUsuario(data);
@@ -61,7 +74,7 @@ const HomeContent: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, refreshTrigger]);
 
   const logout = async () => {
     await signOut(getFirebaseAuth());

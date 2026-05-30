@@ -19,6 +19,7 @@ import {
 import { arrowBackOutline } from 'ionicons/icons';
 import { useAuth } from '../hooks/useAuth';
 import { actualizarNota, obtenerNotas } from '../services/notaService';
+import { sincronizarResumenAcademico } from '../services/academicSummaryService';
 import type { Nota } from '../types/entities';
 
 const NotaDetalle: React.FC = () => {
@@ -70,6 +71,9 @@ const NotaDetalle: React.FC = () => {
         porcentaje: Number(porcentaje),
         calificacion: Number(calificacion),
       });
+      if (user) {
+        await sincronizarResumenAcademico(user.uid);
+      }
       setToastMessage('Nota actualizada exitosamente');
       setShowToast(true);
       setTimeout(() => {
@@ -114,62 +118,92 @@ const NotaDetalle: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonButton fill="clear" onClick={() => history.replace(`/asignaturas/${idAsignatura}`)}>
-              <IonIcon icon={arrowBackOutline} slot="icon-only" />
-            </IonButton>
-          </IonButtons>
-          <IonTitle>Editar Evaluación</IonTitle>
-        </IonToolbar>
+      <IonHeader className="ion-no-border">
+        <header className="app-header" style={{ padding: '0.75rem 1.25rem' }}>
+          <button
+            onClick={() => history.replace(`/asignaturas/${idAsignatura}`)}
+            aria-label="Regresar"
+            className="app-button-base app-button-ghost app-button-icon app-flex app-items-center app-justify-center"
+            style={{ width: '2.5rem', height: '2.5rem', border: 'none', background: 'none', cursor: 'pointer' }}
+          >
+            <IonIcon icon={arrowBackOutline} style={{ fontSize: '1.25rem' }} />
+          </button>
+          <h1 className="app-header-title" style={{ margin: 0, paddingLeft: '0.25rem' }}>Editar Evaluación</h1>
+        </header>
       </IonHeader>
 
-      <IonContent fullscreen>
+      <IonContent fullscreen className="app-bg-background">
         <div className="app-main-narrow app-space-y-4">
-          <div className="app-card app-space-y-4" style={{ padding: '1.25rem' }}>
-            <IonItem>
-              <IonLabel position="floating">Descripción</IonLabel>
+          <div className="app-card app-p-5 app-space-y-4">
+            <div className="app-field">
+              <label htmlFor="nota-descripcion" className="app-field-label">Descripción</label>
               <IonInput
+                id="nota-descripcion"
+                className="app-input-base"
                 value={descripcion}
                 onIonInput={(e) => setDescripcion(e.detail.value ?? '')}
               />
-            </IonItem>
+            </div>
 
-            <div className="app-grid-2">
-              <IonItem>
-                <IonLabel position="floating">Porcentaje</IonLabel>
+            <div className="app-grid-2 app-gap-3">
+              <div className="app-field">
+                <label htmlFor="nota-porcentaje" className="app-field-label">Porcentaje</label>
                 <IonInput
+                  id="nota-porcentaje"
+                  className="app-input-base"
                   type="number"
                   value={porcentaje.toString()}
                   onIonInput={(e) => setPorcentaje(parseInt(e.detail.value ?? '0', 10) || 0)}
                 />
-              </IonItem>
-              <IonItem>
-                <IonLabel position="floating">Calificación</IonLabel>
+              </div>
+              <div className="app-field">
+                <label htmlFor="nota-calificacion" className="app-field-label">Nota</label>
                 <IonInput
+                  id="nota-calificacion"
+                  className="app-input-base"
                   type="number"
                   step="0.1"
                   value={calificacion.toString()}
                   onIonInput={(e) => setCalificacion(parseFloat(e.detail.value ?? '0') || 0)}
                 />
-              </IonItem>
+              </div>
             </div>
 
-            <div className="app-stat-box" style={{ textAlign: 'center' }}>
-              <p className="app-muted">Promedio de esta evaluación</p>
-              <p className="app-title-md">
+            <div className="app-stat-box" style={{ textAlign: 'center', borderRadius: 'var(--radius)', background: 'var(--muted)', border: '1px solid var(--border)', padding: '0.75rem' }}>
+              <p className="app-muted" style={{ margin: 0, fontSize: '0.875rem' }}>Promedio de esta evaluación</p>
+              <p className="app-title-md" style={{ margin: '0.25rem 0 0 0', fontWeight: 600, fontSize: '1.125rem' }}>
                 {((calificacion * porcentaje) / 100).toFixed(2)}
               </p>
             </div>
 
-            <div className="app-grid-2" style={{ paddingTop: '0.5rem' }}>
-              <IonButton expand="block" fill="outline" onClick={() => history.replace(`/asignaturas/${idAsignatura}`)} disabled={saving}>
-                Cancelar
-              </IonButton>
-              <IonButton expand="block" onClick={handleSave} disabled={saving}>
+            <div className="app-flex app-flex-col app-gap-2" style={{ paddingTop: '0.5rem' }}>
+              <IonButton 
+                expand="block" 
+                onClick={handleSave} 
+                className="app-button-base app-button-primary"
+                disabled={saving}
+                style={{ margin: 0 }}
+              >
                 {saving ? 'Guardando…' : 'Guardar'}
               </IonButton>
+              <button 
+                onClick={() => history.replace(`/asignaturas/${idAsignatura}`)} 
+                disabled={saving}
+                className="app-button-base app-button-outline app-w-full app-flex app-items-center app-justify-center"
+                style={{ 
+                  height: '3rem', 
+                  fontSize: '0.95rem', 
+                  border: '1px solid var(--border)', 
+                  borderRadius: '0.625rem', 
+                  background: '#ffffff',
+                  color: 'var(--foreground)',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  boxSizing: 'border-box'
+                }}
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </div>

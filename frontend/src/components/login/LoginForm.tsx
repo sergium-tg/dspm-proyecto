@@ -63,7 +63,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <IonInput
               id="register-nombre"
               className="app-input-base"
-              fill="outline"
               type="text"
               value={nombres}
               onIonInput={(e) => onNombresChange(e.detail.value ?? '')}
@@ -78,7 +77,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <IonInput
             id="login-email"
             className="app-input-base"
-            fill="outline"
             type="email"
             value={email}
             onIonInput={(e) => onEmailChange(e.detail.value ?? '')}
@@ -93,7 +91,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <IonInput
               id="login-password"
               className="app-input-base"
-              fill="outline"
               type="password"
               value={password}
               onIonInput={(e) => onPasswordChange(e.detail.value ?? '')}
@@ -110,7 +107,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <IonInput
               id="register-codigo"
               className="app-input-base"
-              fill="outline"
               type="text"
               value={codigo}
               onIonInput={(e) => onCodigoChange(e.detail.value ?? '')}
@@ -136,7 +132,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </IonButton>
       </form>
 
-      <div className="app-flex app-justify-between app-text-xs app-text-muted-foreground">
+      <div className="app-link-row">
         {mode !== 'login' ? (
           <button type="button" onClick={() => onModeChange('login')}>
             Volver al login
