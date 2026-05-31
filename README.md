@@ -69,6 +69,14 @@ Para probar en el movil Android:
 En el escritorio del movil buscar el icono que dice "frontend".
 ```
 
+### 2.5 Usuario de pruebas
+Para facillitar observar rapidamente los resultados de las pruebas de la logica de negocio, en la base de datos existe un usuario con el que se hizo las validaciones de la aplicacion.
+```
+correo: user@mail.com
+contraseña: User123*
+```
+
+
 ## 3. Prototipo
 Posterior al diseño de la estructura de datos (incluido el diagrama MER) se realizó la construcción de una aplicación PROTOTIPO mediante la herramienta de IA "LOVABLE".
 
