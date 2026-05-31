@@ -57,6 +57,14 @@ Ya teniendo instalado capacitor para el uso de sensores, instalamos la aplicaci�
 ionic cap sync android
 ionic cap run android
 ```
+**NOTA:** Existe la posibilidad de que al correr el comando de "run" falle finalmente la ejecución.
+Ante dicha situación se debe hacer el siguiente procedimiento:
+
+1. Abrir Android Studio.
+2. Del directorio de proyecto IMPORTAR a Android Studio el directorio "frontend\android".
+3. Luego de un rato, automaticamente se crea el archivo gradle y con esto ya queda listo.
+4. Correr: ionic cap run android
+
 
 ### 2.4 Correr la aplicación
 Para probar en windows ir a la url:
