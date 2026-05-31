@@ -44,33 +44,3 @@ El backend consume servicios RESTful protegidos. A continuación, se detallan lo
     const response = await axios.get('[https://dspm-backend-ttdg.onrender.com/api/health](https://dspm-backend-ttdg.onrender.com/api/health)');
     return response.data;
   };
-  ---
-
-## 4. Prototipo
-Posterior al diseño de la estructura de datos (incluido el diagrama MER) se realizó la construcción de una aplicación PROTOTIPO mediante la herramienta de IA "LOVABLE".
-
--**El link del repositorio:** [https://github.com/sergium-tg/gradebook-genie.git](https://github.com/sergium-tg/gradebook-genie)
-
--**Dentro de este proyecto:** la ruta /prototipo/ dentro del repositorio
-
-## 5. Lista de APIs de Backend Consumidas
-
-Todos los endpoints base utilizan la URL configurada en las variables de entorno (`API_BASE_URL`). Los identificadores (`id`) son de tipo numérico (`Number`).
-
-### 1. Autenticación y Usuarios
-* **GET** `/usuarios?email={email}` - Obtiene el perfil del usuario mediante su correo electrónico para validar la sesión.
-* **POST** `/usuarios` - Registra un nuevo usuario en la base de datos del sistema.
-
-### 2. Datos del Estudiante
-* **GET** `/estudiantes?idUsuario={idUsuario}` - Recupera la información académica y personal vinculada al usuario autenticado.
-
-### 3. Asignaturas
-* **GET** `/asignaturas?idEstudiante={idEstudiante}` - Lista todas las materias inscritas por un estudiante específico.
-* **GET** `/asignaturas/{id}` - Obtiene el detalle completo de una asignatura particular.
-
-### 4. Calificaciones y Evaluaciones
-* **GET** `/notas?idAsignatura={idAsignatura}` - Recupera el listado de evaluaciones, porcentajes y calificaciones de una materia.
-* **GET** `/notas/{id}` - Obtiene el detalle de una calificación específica.
-
-### 5. Resumen Académico
-* **GET** `/academicSummary?idEstudiante={idEstudiante}` - Consume los consolidados estadísticos del estudiante (promedio acumulado, créditos aprobados, etc.).
