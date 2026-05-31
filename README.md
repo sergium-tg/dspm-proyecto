@@ -1,4 +1,5 @@
 # Proyecto Final Desarrollo de Software para Plataformas Móviles
+**Diseñado y construido por**: Sergio Talero G.
 
 ## Aplicacion para calcular el promedio de notas
 
